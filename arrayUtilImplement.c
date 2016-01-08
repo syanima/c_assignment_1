@@ -76,3 +76,38 @@ int count(ArrayUtil util, MatchFunc* match, void* hint){
 	return count;
 }
 
+int filter(ArrayUtil util, MatchFunc* match, void* hint, void** destination, int maxItems ){
+ 	int count=0;
+ 	int till=util.length*util.typeSize;
+	void *item;	
+	for(int i=0;(i< till && count < maxItems);i=i+util.typeSize){
+		item=util.base+i;			
+		if(match(hint,item)==1){			
+			destination[count]=item;
+			count=count+1;
+		}
+	}	
+	return count;
+}
+
+void map(ArrayUtil source, ArrayUtil destination, ConvertFunc* convert, void* hint){
+	for(int i = 0 ; i < source.length ; i ++){
+		convert(hint,source.base+(i * source.typeSize),destination.base+(i * destination.typeSize));
+	}
+}
+
+void forEach(ArrayUtil util, OperationFunc* operation, void* hint){
+	int i;
+	for(i=0;i < util.length; i++){
+		operation(hint,util.base+(i * util.typeSize));
+	}
+}
+
+void* reduce(ArrayUtil util, ReducerFunc* reducer, void* hint, void* initialValue){
+	for (int i = 0; i < util.length; i++){
+		void * answer= reducer( hint, initialValue, util.base);
+		initialValue = answer;
+		util.base+=util.typeSize;
+	}
+	return initialValue;
+}
