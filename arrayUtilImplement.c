@@ -49,7 +49,6 @@ void* findFirst(ArrayUtil util, MatchFunc* match, void* hint){
 		}
 		item+=util.typeSize;
 	}
-
 	return NULL;
 }
 
